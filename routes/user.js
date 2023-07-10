@@ -51,8 +51,6 @@ router.post(
       res
         .status(201)
         .json({ success: true, message: "Your profile is now updated" });
-
-      console.log(user._id, avatar);
     } catch (error) {
       res
         .status(500)
