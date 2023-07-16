@@ -11,7 +11,7 @@ app.use(express.json());
 app.use(userRouter);
 
 app.get("/", (req, res) => {
-  res.json({ message: "hello" });
+  res.json({ success: true, message: "Welcome to backend!" });
 });
 
 app.listen(process.env.PORT, () => {

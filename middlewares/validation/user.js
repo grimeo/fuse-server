@@ -1,46 +1,46 @@
 const { check, validationResult } = require("express-validator");
 
 exports.validateUserSignup = [
-  check("firstname")
+  check("FirstName")
     .not()
     .isEmpty()
-    .withMessage("firstname cannot be empty")
-    .isAlpha()
-    .withMessage("firstname must be a valid name")
+    .withMessage("FirstName cannot be empty")
+    .isString()
+    .withMessage("FirstName must be a valid name")
     .isLength({ min: 2, max: 20 })
-    .withMessage("firstname must be 2-20 characters."),
-  check("middlename")
+    .withMessage("FirstName must be 2-20 characters."),
+  check("MiddleName")
     .not()
     .isEmpty()
-    .withMessage("middlename cannot be empty")
-    .isAlpha()
-    .withMessage("middlename must be a valid name")
+    .withMessage("MiddleName cannot be empty")
+    .isString()
+    .withMessage("MiddleName must be a valid name")
     .isLength({ min: 2, max: 20 })
-    .withMessage("middlename must be 2-20 characters."),
-  check("lastname")
+    .withMessage("MiddleName must be 2-20 characters."),
+  check("LastName")
     .not()
     .isEmpty()
-    .withMessage("lastname cannot be empty")
-    .isAlpha()
-    .withMessage("lastname must be a valid name")
+    .withMessage("LastName cannot be empty")
+    .isString()
+    .withMessage("LastName must be a valid name")
     .isLength({ min: 2, max: 20 })
-    .withMessage("lastname must be 2-20 characters."),
-  check("email").normalizeEmail().isEmail().withMessage("Invalid Email"),
-  check("password")
+    .withMessage("LastName must be 2-20 characters."),
+  check("Email").normalizeEmail().isEmail().withMessage("Invalid Email"),
+  check("Password")
     .trim()
     .not()
     .isEmpty()
-    .withMessage("password cannot be empty")
+    .withMessage("Password cannot be empty")
     .isLength({ min: 8, max: 20 })
     .withMessage("Password must be 8-20 characters long."),
-  check("confirmPassword")
+  check("ConfirmPassword")
     .trim()
     .not()
     .isEmpty()
-    .withMessage("password cannot be empty")
+    .withMessage("Password cannot be empty")
     .custom((value, { req }) => {
-      if (value !== req.body.password) {
-        throw new Error("password does not match");
+      if (value !== req.body.Password) {
+        throw new Error("Password does not match");
       }
       return true;
     }),
@@ -54,10 +54,10 @@ exports.userValidation = (req, res, next) => {
 };
 
 exports.validateUserSignIn = [
-  check("email").trim().isEmail().withMessage("Required: email and password"),
-  check("password")
+  check("Email").trim().isEmail().withMessage("Required: Email and Password"),
+  check("Password")
     .trim()
     .not()
     .isEmpty()
-    .withMessage("Required: email and password"),
+    .withMessage("Required: Email and Password"),
 ];

@@ -2,56 +2,56 @@ const mongoose = require("mongoose");
 const bcrypt = require("bcrypt");
 
 const user = {
-  firstname: "",
-  middlename: "",
-  lastname: "",
-  email: "",
-  password: "",
-  imageId: "",
-  avatar: "",
+  FirstName: "",
+  MiddleName: "",
+  LastName: "",
+  Email: "",
+  Password: "",
+  ImageId: "",
+  Avatar: "",
 };
 
 const userSchema = new mongoose.Schema({
-  firstname: {
+  FirstName: {
     type: String,
     required: true,
   },
-  middlename: {
+  MiddleName: {
     type: String,
     required: true,
   },
-  lastname: {
+  LastName: {
     type: String,
     required: true,
   },
-  email: {
+  Email: {
     type: String,
     required: true,
     unique: true,
   },
-  password: {
+  Password: {
     type: String,
     required: true,
   },
-  avatar: {
-    type: Buffer,
+  Avatar: {
+    type: String,
   },
 });
 
 userSchema.pre("save", function (next) {
-  if (this.isModified("password")) {
-    bcrypt.hash(this.password, 8, (err, hash) => {
+  if (this.isModified("Password")) {
+    bcrypt.hash(this.Password, 8, (err, hash) => {
       if (err) return next(err);
-      this.password = hash;
+      this.Password = hash;
       next();
     });
   }
 });
 
-userSchema.methods.comparePassword = async function (password) {
-  if (!password) throw new Error("Password is missing, cannot compare");
+userSchema.methods.comparePassword = async function (Password) {
+  if (!Password) throw new Error("Password is missing, cannot compare");
   try {
-    const result = await bcrypt.compare(password, this.password);
+    const result = await bcrypt.compare(Password, this.Password);
     return result;
   } catch (error) {
     console.log("Error while comparing password. ", error.message);
