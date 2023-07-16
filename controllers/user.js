@@ -3,6 +3,8 @@ const User = require("../models/user");
 
 const sharp = require("sharp");
 
+const cloudinary = require("../helper/ImageUpload");
+
 exports.createUser = async (req, res) => {
   const { FirstName, MiddleName, LastName, Email, Password } = req.body;
 
@@ -49,20 +51,43 @@ exports.uploadProfile = async (req, res) => {
       .json({ success: false, message: "unauthorized access" });
 
   try {
-    const profileBuffer = req.file.buffer;
-    const { width, height } = await sharp(profileBuffer).metadata();
-    const avatar = await sharp(profileBuffer)
-      .resize(Math.round(width * 0.5), Math.round(height * 0.5))
-      .toBuffer();
+    const result = await cloudinary.uploader.upload(req.file.path, {
+      public_id: `${user._id}_profile`,
+      width: 500,
+      height: 500,
+    });
 
-    await User.findByIdAndUpdate(user._id, { avatar });
-    res
-      .status(201)
-      .json({ success: true, message: "Your profile is now updated" });
+    await User.findByIdAndUpdate(user._id, { Avatar: result.url });
+
+    res.status(201).json({
+      success: true,
+      message: "Your profile is now updated",
+    });
+
+    // console.log(user);
   } catch (error) {
     res
       .status(500)
       .json({ sucess: false, message: "server error uploading image" });
     console.log("Error while uploading image ", error.message);
   }
+
+  // if gagamit ng sharp
+  // try {
+  //   const profileBuffer = req.file.buffer;
+  //   const { width, height } = await sharp(profileBuffer).metadata();
+  //   const avatar = await sharp(profileBuffer)
+  //     .resize(Math.round(width * 0.5), Math.round(height * 0.5))
+  //     .toBuffer();
+
+  //   await User.findByIdAndUpdate(user._id, { avatar });
+  //   res
+  //     .status(201)
+  //     .json({ success: true, message: "Your profile is now updated" });
+  // } catch (error) {
+  //   res
+  //     .status(500)
+  //     .json({ sucess: false, message: "server error uploading image" });
+  //   console.log("Error while uploading image ", error.message);
+  // }
 };

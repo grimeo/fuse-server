@@ -15,7 +15,7 @@ const {
 } = require("../middlewares/validation/user");
 const { isAuth } = require("../middlewares/auth");
 
-const storage = multer.memoryStorage();
+const storage = multer.diskStorage({});
 
 const fileFilter = (req, file, cb) => {
   if (file.mimetype.startsWith("image")) {
