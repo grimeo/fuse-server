@@ -9,8 +9,9 @@ exports.createUser = async (req, res) => {
   const { FirstName, MiddleName, LastName, Email, Password } = req.body;
 
   const isNewUser = await User.isEmailExists(Email);
-  if (!isNewUser)
+  if (!isNewUser) {
     return res.json({ success: false, message: "Email already exists" });
+  }
 
   const user = await User({
     FirstName,
@@ -21,7 +22,7 @@ exports.createUser = async (req, res) => {
   });
 
   await user.save();
-  res.json(user);
+  res.json({ success: true, user });
 };
 
 exports.userSignin = async (req, res) => {
@@ -34,17 +35,27 @@ exports.userSignin = async (req, res) => {
   if (!isMatch)
     return res.json({
       success: false,
-      mesage: "Email and Password does not match.",
+      message: "Email and password does not match.",
     });
 
   const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, {
     expiresIn: "1d",
   });
-  res.json({ success: true, user: user, token });
+
+  const userInfo = {
+    FirstName: user.FirstName,
+    MiddleName: user.MiddleName,
+    LastName: user.LastName,
+    Email: user.Email,
+    Avatar: user.Avatar ? user.Avatar : "",
+  };
+
+  res.json({ success: true, user: userInfo, token });
 };
 
 exports.uploadProfile = async (req, res) => {
   const { user } = req;
+  // console.log(user);
   if (!user)
     return res
       .status(401)
@@ -68,7 +79,7 @@ exports.uploadProfile = async (req, res) => {
   } catch (error) {
     res
       .status(500)
-      .json({ sucess: false, message: "server error uploading image" });
+      .json({ success: false, message: "server error uploading image" });
     console.log("Error while uploading image ", error.message);
   }
 

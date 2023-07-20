@@ -61,7 +61,8 @@ userSchema.methods.comparePassword = async function (Password) {
 userSchema.statics.isEmailExists = async function (email) {
   if (!email) throw new Error("Invalid email");
   try {
-    const user = await this.findOne({ email });
+    const user = await this.findOne({ Email: email });
+    console.log("email exists", email);
     if (user) return false;
     return true;
   } catch (error) {
