@@ -68,17 +68,9 @@ exports.uploadProfile = async (req, res) => {
       height: 500,
     });
 
-    await User.findByIdAndUpdate(user._id, { Avatar: result.url });
-
-    const user = await User({
-      FirstName,
-      MiddleName,
-      LastName,
-      Email,
-      Password,
+    const userInfo = await User.findByIdAndUpdate(user._id, {
+      Avatar: result.url,
     });
-
-    const userInfo = await user.findOne(user._id);
 
     res.status(201).json({
       success: true,
