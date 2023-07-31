@@ -68,13 +68,14 @@ exports.uploadProfile = async (req, res) => {
       height: 500,
     });
 
-    await User.findByIdAndUpdate(user._id, {
+    const userInfo = await User.findByIdAndUpdate(user._id, {
       Avatar: result.url,
     });
 
     res.status(201).json({
       success: true,
       message: "Your profile is now updated",
+      user: userInfo,
     });
 
     // console.log(user);
