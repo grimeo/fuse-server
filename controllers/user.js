@@ -69,11 +69,21 @@ exports.uploadProfile = async (req, res) => {
     });
 
     await User.findByIdAndUpdate(user._id, { Avatar: result.url });
-    const user = await User.findOne(user._id);
+
+    const user = await User({
+      FirstName,
+      MiddleName,
+      LastName,
+      Email,
+      Password,
+    });
+
+    const userInfo = await user.findOne(user._id);
+
     res.status(201).json({
       success: true,
       message: "Your profile is now updated",
-      user: user,
+      user: userInfo,
     });
 
     // console.log(user);
