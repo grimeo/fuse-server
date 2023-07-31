@@ -67,10 +67,11 @@ exports.uploadProfile = async (req, res) => {
       width: 500,
       height: 500,
     });
-
-    const userInfo = await User.findByIdAndUpdate(user._id, {
+    await User.findByIdAndUpdate(user._id, {
       Avatar: result.url,
     });
+
+    const userInfo = User.findOne(user._ud);
 
     res.status(201).json({
       success: true,
