@@ -7,6 +7,7 @@ const {
   createUser,
   userSignin,
   uploadProfile,
+  setTypeOfuser,
 } = require("../controllers/user");
 const {
   validateUserSignup,
@@ -35,5 +36,6 @@ router.post(
   uploads.single("profile"),
   uploadProfile
 );
+router.post("/set-usertype", setTypeOfuser);
 
 module.exports = router;

@@ -48,6 +48,7 @@ exports.userSignin = async (req, res) => {
     LastName: user.LastName,
     Email: user.Email,
     Avatar: user.Avatar ? user.Avatar : "",
+    isServiceProvider: user.isServiceProvider ? user.isServiceProvider : false,
   };
 
   res.json({ success: true, user: userInfo, token });
@@ -88,23 +89,32 @@ exports.uploadProfile = async (req, res) => {
       .json({ success: false, message: "server error uploading image" });
     console.log("Error while uploading image ", error.message);
   }
+};
 
-  // if gagamit ng sharp
-  // try {
-  //   const profileBuffer = req.file.buffer;
-  //   const { width, height } = await sharp(profileBuffer).metadata();
-  //   const avatar = await sharp(profileBuffer)
-  //     .resize(Math.round(width * 0.5), Math.round(height * 0.5))
-  //     .toBuffer();
+exports.setTypeOfuser = async (req, res) => {
+  const user = req.body.user;
+  const userType = req.body.isServiceProvider;
+  if (!user)
+    return res
+      .status(401)
+      .json({ success: false, message: "unauthorized access" });
 
-  //   await User.findByIdAndUpdate(user._id, { avatar });
-  //   res
-  //     .status(201)
-  //     .json({ success: true, message: "Your profile is now updated" });
-  // } catch (error) {
-  //   res
-  //     .status(500)
-  //     .json({ sucess: false, message: "server error uploading image" });
-  //   console.log("Error while uploading image ", error.message);
-  // }
+  try {
+    const userInfo = await User.findByIdAndUpdate(
+      user._id,
+      {
+        isServiceProvider: userType,
+      },
+      { new: true }
+    );
+    res.status(201).json({
+      success: true,
+      message: "user type is now updated",
+      user: userInfo,
+    });
+    // console.log(user);
+  } catch (error) {
+    res.status(500).json({ success: false, message: "server error user type" });
+    console.log("server error user type ", error.message);
+  }
 };
